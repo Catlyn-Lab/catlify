@@ -49,6 +49,11 @@ export function installMocks() {
         return rpc(p.method, p.args ?? {});
       }
       case "youtube_video": return { id: "dQw4w9WgXcQ", title: "Rick Astley - Never Gonna Give You Up (Official Video)", channel: "Rick Astley", url: null, thumbnail: null };
+      case "plugin:app|version": return "0.1.14";
+      // ?update shows the update popup.
+      case "plugin:updater|check": return new URLSearchParams(location.search).has("update")
+        ? { rid: 1, currentVersion: "0.1.14", version: "0.1.15", date: "2026-11-15 10:00:00.0 +00:00:00", body: "• In-app updates for macOS and Windows\n• Sleep timer on the car screen\n• Faster chart loading", rawJson: {} }
+        : null;
       case "library_tracks": return tracks;
       case "library_folders": return ["/Users/you/Music"];
       case "playlists": return [{ id: 1, name: "Late Night Lossless", trackCount: 14, createdAt: 0 }, { id: 2, name: "Focus", trackCount: 8, createdAt: 0 }];

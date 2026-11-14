@@ -269,6 +269,11 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
+            #[cfg(desktop)]
+            {
+                app.handle().plugin(tauri_plugin_updater::Builder::new().build())?;
+                app.handle().plugin(tauri_plugin_process::init())?;
+            }
             let handle = app.handle().clone();
             // On mobile the media service may already have started the engine (e.g. from
             // Android Auto / CarPlay); core::init returns that same instance.

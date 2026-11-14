@@ -126,6 +126,8 @@ jobs:
           $dir = (Get-ChildItem "$env:RUNNER_TEMP" -Directory -Filter 'ffmpeg-*' | Select-Object -First 1).FullName
           "FFMPEG_DIR=$dir" | Out-File $env:GITHUB_ENV -Append
           "LIBCLANG_PATH=C:\Program Files\LLVM\bin" | Out-File $env:GITHUB_ENV -Append
+          # ffmpeg-sys-next's build script (bindgen) overflows Windows' default 1 MB main-thread stack.
+          "RUSTFLAGS=-C link-arg=/STACK:16777216" | Out-File $env:GITHUB_ENV -Append
           New-Item -ItemType Directory -Force src-tauri/ffmpeg | Out-Null
           $resources = [ordered]@{}
           foreach ($dll in Get-ChildItem "$dir/bin/*.dll") {
@@ -139,8 +141,22 @@ jobs:
 
       - name: Build
         shell: bash
+        env:
+          # Signs the in-app update packages (repo secrets; see README → Releasing).
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          RELEASE: ${{ needs.prepare.outputs.release }}
         run: |
-          if [ "$RUNNER_OS" = macOS ]; then pnpm tauri build --bundles app,dmg; else pnpm tauri build; fi
+          args=()
+          if [ -n "$TAURI_SIGNING_PRIVATE_KEY" ]; then
+            args+=(--config '{"bundle":{"createUpdaterArtifacts":true}}')
+          elif [ "$RELEASE" = true ]; then
+            echo "::error::TAURI_SIGNING_PRIVATE_KEY isn't set: installed apps couldn't update to this release"; exit 1
+          else
+            echo "::warning::No updater signing key: building without update packages"
+          fi
+          if [ "$RUNNER_OS" = macOS ]; then args+=(--bundles app,dmg); fi
+          pnpm tauri build "${args[@]}"
 
       - name: Collect installers
         id: files
@@ -152,9 +168,16 @@ jobs:
           if [ "$RUNNER_OS" = macOS ]; then
             cp "$b"/dmg/*.dmg "out/Catlify_${v}_macos-arm64.dmg"
             ditto -c -k --keepParent "$b/macos/Catlify.app" "out/Catlify_${v}_macos-arm64.app.zip"
+            # In-app update package + signature
+            if [ -f "$b/macos/Catlify.app.tar.gz" ]; then
+              cp "$b/macos/Catlify.app.tar.gz" "out/Catlify_${v}_macos-arm64.app.tar.gz"
+              cp "$b/macos/Catlify.app.tar.gz.sig" "out/Catlify_${v}_macos-arm64.app.tar.gz.sig"
+            fi
           else
             cp "$b"/nsis/*-setup.exe "out/Catlify_${v}_windows-x64-setup.exe"
             cp "$b"/msi/*.msi "out/Catlify_${v}_windows-x64.msi"
+            # The NSIS installer is the in-app update package on Windows
+            for sig in "$b"/nsis/*-setup.exe.sig; do [ -f "$sig" ] && cp "$sig" "out/Catlify_${v}_windows-x64-setup.exe.sig"; done
           fi
           ls -la out
 
@@ -174,6 +197,26 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
+      TAG: ${{ needs.prepare.outputs.tag }}
+      VERSION: ${{ needs.prepare.outputs.version }}
+      PR_TITLE: ${{ github.event.pull_request.title }}
+      PR_BODY: ${{ github.event.pull_request.body }}
     steps:
+      # latest.json: what installed apps check (tauri.conf.json → plugins.updater.endpoints).
+      - name: Update manifest
+        run: |
+          gh release download "$TAG" -R "$GITHUB_REPOSITORY" -p '*.sig' -D sigs
+          base="https://github.com/$GITHUB_REPOSITORY/releases/download/$TAG"
+          mac="Catlify_${VERSION}_macos-arm64.app.tar.gz"
+          win="Catlify_${VERSION}_windows-x64-setup.exe"
+          notes=$(printf '%s\n\n%s' "$PR_TITLE" "$PR_BODY" | sed -e 's/\r$//')
+          jq -n --arg v "$VERSION" --arg notes "$notes" --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg macSig "$(cat "sigs/$mac.sig")" --arg macUrl "$base/$mac" \
+            --arg winSig "$(cat "sigs/$win.sig")" --arg winUrl "$base/$win" \
+            '{version: $v, notes: $notes, pub_date: $date, platforms: {
+                "darwin-aarch64": {signature: $macSig, url: $macUrl},
+                "windows-x86_64": {signature: $winSig, url: $winUrl}}}' > latest.json
+          cat latest.json
+          gh release upload "$TAG" latest.json -R "$GITHUB_REPOSITORY" --clobber
       # Publishing creates the v<version> tag on the merge commit.
-      - run: gh release edit "${{ needs.prepare.outputs.tag }}" -R "$GITHUB_REPOSITORY" --draft=false --latest
+      - run: gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --draft=false --latest
