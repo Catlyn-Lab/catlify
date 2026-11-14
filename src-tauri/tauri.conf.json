@@ -50,5 +50,16 @@
     "android": {
       "minSdkVersion": 26
     }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEZFNzJDRjdGMjk1MERFOEMKUldTTTNsQXBmODl5L3BQdTJub3l4UENrVGRUMXFSMGJabG5vTlk1eXVxZVcyRU0yelB4WGkxbUsK",
+      "endpoints": [
+        "https://github.com/Catlyn-Lab/catlify/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
+    }
   }
 }

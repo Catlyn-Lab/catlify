@@ -9,6 +9,8 @@
   import NowPlaying from "./components/NowPlaying.svelte";
   import Overlays from "./components/Overlays.svelte";
   import VideoPlayer from "./components/VideoPlayer.svelte";
+  import UpdateDialog from "./components/UpdateDialog.svelte";
+  import { updater } from "./lib/updater.svelte";
   import PlayerBar from "./components/PlayerBar.svelte";
   import QueuePanel from "./components/QueuePanel.svelte";
   import Sidebar from "./components/Sidebar.svelte";
@@ -37,6 +39,7 @@
   onMount(() => {
     // Unfinished imports continue once the library is loaded (to skip songs already there).
     store.init().then(() => importer.kick());
+    updater.start();
     // Android: a YouTube link shared to Catlify (StafyYouTube.kt) opens the YouTube page.
     const w = window as unknown as { __stafyShare?: (url: string) => void };
     w.__stafyShare = (url) => store.go({ name: "youtube", query: url });
@@ -202,6 +205,7 @@
 
 {#if store.video}{#key store.video}<VideoPlayer />{/key}{/if}
 <Overlays />
+<UpdateDialog />
 
 <style>
   .shell {

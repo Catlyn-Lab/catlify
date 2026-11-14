@@ -37,6 +37,9 @@ sha2 = "0.11.1"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 souvlaki = "0.9"
+# In-app updates from GitHub releases (desktop).
+tauri-plugin-updater = "2"
+tauri-plugin-process = "2"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 # Notch player window (src/notch.rs).

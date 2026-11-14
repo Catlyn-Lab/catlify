@@ -4,6 +4,14 @@
   import { api } from "../lib/api";
   import { store } from "../lib/store.svelte";
   import Icon from "../components/Icon.svelte";
+  import { getVersion } from "@tauri-apps/api/app";
+  import { updater } from "../lib/updater.svelte";
+
+  let version = $state("");
+  getVersion().then((v) => (version = v)).catch(() => {});
+  const checkedAt = $derived(
+    updater.lastChecked ? new Date(updater.lastChecked).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) : "",
+  );
 
   async function addFolder() {
     const dir = await open({ directory: true, multiple: false, title: "Choose a music folder" });
@@ -152,15 +160,59 @@
   </section>
   {/if}
 
+  {#if updater.supported}
+  <section>
+    <h2 class="section-title">Updates</h2>
+    <div class="update-row">
+      <div class="update-info">
+        {#if updater.update}
+          <strong>Catlify {updater.update.version} is available</strong>
+          <span>You have {version}.</span>
+        {:else}
+          <strong>Catlify {version}</strong>
+          <span>{updater.phase === "checking" ? "Checking for updates…" : checkedAt ? `Up to date · checked at ${checkedAt}` : "Updates are checked automatically."}</span>
+        {/if}
+      </div>
+      {#if updater.update}
+        <button class="btn primary" disabled={updater.busy} onclick={() => updater.install()}>Update &amp; restart</button>
+      {:else}
+        <button class="btn" disabled={updater.busy} onclick={() => updater.check(true)}>
+          {updater.phase === "checking" ? "Checking…" : "Check for updates"}
+        </button>
+      {/if}
+    </div>
+  </section>
+  {/if}
+
   <section>
     <h2 class="section-title">About</h2>
     <p class="hint">
-      Catlify 0.1.0. Charts from Apple Music and Deezer; synced lyrics from LRCLIB. Drop audio files anywhere in the window to play them.
+      Catlify {version}. Charts from Apple Music and Deezer; synced lyrics from LRCLIB. Drop audio files anywhere in the window to play them.
     </p>
   </section>
 </div>
 
 <style>
+  .update-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    border-radius: 10px;
+    background: var(--surface);
+  }
+  .update-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+  }
+  .update-info span {
+    color: var(--muted);
+    font-size: 12.5px;
+  }
   section {
     max-width: 820px;
   }

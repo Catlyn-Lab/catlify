@@ -30,6 +30,10 @@ Your files in full quality, live charts, synced lyrics, YouTube, and your car, i
 | **iPhone / iPad** | Build from source | CarPlay included |
 | **Linux** | Build from source | |
 
+> [!TIP]
+> On macOS and Windows, Catlify updates itself: when a new version is out you'll get a popup with what's new,
+> and **Settings → Updates** has a "Check for updates" button.
+
 ## ✨ Features
 
 <table>
@@ -246,5 +250,23 @@ src-tauri/gen/apple/      CarPlay, Now Playing, ytdlp-apple bridge
 GitHub Actions then builds macOS (`.dmg`, `.app.zip`) and Windows (`-setup.exe`, `.msi`), tags the merge
 commit `v<version>` and publishes the release. To try the builds without releasing, use
 **Actions → Release → Run workflow**.
+
+Installed apps find the new version through `latest.json` in the release and offer it in a popup.
+Update packages are signed; the app only installs ones that match the public key in `tauri.conf.json`.
+
+<details>
+<summary><b>Update signing key (one-time setup)</b></summary>
+
+The private key lives at `~/.tauri/catlify-updater.key` (password in `catlify-updater.key.password`).
+Releases need both as repository secrets:
+
+```sh
+gh secret set TAURI_SIGNING_PRIVATE_KEY -R Catlyn-Lab/catlify < ~/.tauri/catlify-updater.key
+gh secret set TAURI_SIGNING_PRIVATE_KEY_PASSWORD -R Catlyn-Lab/catlify < ~/.tauri/catlify-updater.key.password
+```
+
+Keep a backup of the key: if it's lost, installed apps can't update to newer releases.
+
+</details>
 
 `main` is protected: changes land through pull requests that a Catlyn-Lab admin merges.
