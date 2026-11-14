@@ -11,7 +11,8 @@
       "frameworks": [
         "frameworks/Python.framework"
       ],
-      "signingIdentity": "-"
+      "signingIdentity": "-",
+      "hardenedRuntime": false
     }
   }
 }

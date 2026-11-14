@@ -2,7 +2,7 @@
   import { open } from "@tauri-apps/plugin-dialog";
   import { openUrl } from "@tauri-apps/plugin-opener";
   import { api, ytBridge, type YtStatus, type YtVideo } from "../lib/api";
-  import { isMobileOS } from "../lib/platform";
+  import { isMobileOS, isWindows } from "../lib/platform";
   import { downloads } from "../lib/downloads.svelte";
   import { store } from "../lib/store.svelte";
   import { fmtTime, toQueueItem } from "../lib/util";
@@ -135,13 +135,13 @@
       <div>
         <b>One-time setup</b>
         <p>
-          Catlify uses <code>yt-dlp</code>{status.ffmpeg ? "" : " and ffmpeg"} to download audio. Install with Homebrew, then reopen this page:
+          Catlify uses <code>yt-dlp</code>{status.ffmpeg ? "" : " and ffmpeg"} to download audio. Install {isWindows ? "it" : "with Homebrew"}, then reopen this page:
         </p>
-        <code class="cmd">brew install yt-dlp{status.ffmpeg ? "" : " ffmpeg"}</code>
+        <code class="cmd">{isWindows ? "winget install yt-dlp.yt-dlp" : `brew install yt-dlp${status.ffmpeg ? "" : " ffmpeg"}`}</code>
       </div>
     </div>
   {:else if status && !canMp3 && !isMobileOS}
-    <p class="hint">Songs are saved as M4A (YouTube's own audio). For MP3, install ffmpeg: <code>brew install ffmpeg</code></p>
+    <p class="hint">Songs are saved as M4A (YouTube's own audio). For MP3, install ffmpeg: <code>{isWindows ? "winget install Gyan.FFmpeg" : "brew install ffmpeg"}</code></p>
   {/if}
 
   <form class="bar" onsubmit={(e) => (e.preventDefault(), search())}>

@@ -76,4 +76,14 @@ ImageDraw.Draw(mask).rounded_rectangle((0, 0, 4095, 4095), radius=int(4096 * 0.2
 mask = mask.resize((1024, 1024), Image.LANCZOS)
 rounded = full.convert("RGBA"); rounded.putalpha(mask)
 rounded.save(f"{out_dir}/icon-rounded.png")
+# macOS: Apple's grid puts the 824 px tile on a 1024 px canvas with a soft drop shadow, so the
+# icon sits at the same size as other apps in the Dock (src-tauri/icons/icon.icns via iconutil).
+from PIL import ImageFilter
+mac = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+tile = rounded.resize((824, 824), Image.LANCZOS)
+shadow = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+shadow.paste((0, 0, 0, 90), (100, 112), tile.split()[3])
+mac = Image.alpha_composite(mac, shadow.filter(ImageFilter.GaussianBlur(14)))
+mac.alpha_composite(tile, (100, 100))
+mac.save(f"{out_dir}/icon-macos.png")
 print("ok")

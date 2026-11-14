@@ -20,6 +20,11 @@ concurrency:
 
 env:
   FFMPEG_WINDOWS: https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-n9.0-latest-win64-lgpl-shared-9.0.zip
+  # Windows ships its own yt-dlp (+ QuickJS for YouTube's JavaScript challenges), checksum-pinned.
+  YTDLP_WINDOWS: https://github.com/yt-dlp/yt-dlp/releases/download/2026.10.26/yt-dlp.exe
+  YTDLP_WINDOWS_SHA256: f5389d3698ecde4ef06f4e6b1ce0294fe9ac1396228c8990b8d3416d6d177a7d
+  QJS_WINDOWS: https://github.com/quickjs-ng/quickjs/releases/download/v0.18.0/qjs-windows-x86_64.exe
+  QJS_WINDOWS_SHA256: ff03398d74ea6e6bd3a8e58058f7003225abcac229d7d57775b7aaae812a49c7
 
 jobs:
   prepare:
@@ -65,8 +70,7 @@ jobs:
           ### Install
           - **macOS (Apple silicon)**: open the `.dmg` and drag Catlify to Applications. This build isn't notarized:
             the first time, right-click Catlify → Open, or run `xattr -dr com.apple.quarantine /Applications/Catlify.app`.
-          - **Windows**: run the `-setup.exe` (or the `.msi`). For YouTube downloads install yt-dlp:
-            `winget install yt-dlp.yt-dlp` (and `winget install Gyan.FFmpeg` for MP3).
+          - **Windows**: run the `-setup.exe` (or the `.msi`). YouTube support is built in.
           EOF
           gh release create "${{ steps.version.outputs.tag }}" --draft --target "$SHA" \
             --title "Catlify ${{ steps.version.outputs.version }}" --notes-file notes.md --generate-notes
@@ -130,10 +134,26 @@ jobs:
           "RUSTFLAGS=-C link-arg=/STACK:16777216" | Out-File $env:GITHUB_ENV -Append
           New-Item -ItemType Directory -Force src-tauri/ffmpeg | Out-Null
           $resources = [ordered]@{}
-          foreach ($dll in Get-ChildItem "$dir/bin/*.dll") {
-            Copy-Item $dll.FullName src-tauri/ffmpeg/
-            $resources["ffmpeg/$($dll.Name)"] = $dll.Name
+          # FFmpeg DLLs (playback) and ffmpeg.exe (MP3 downloads), next to Catlify.exe
+          foreach ($f in @(Get-ChildItem "$dir/bin/*.dll") + @(Get-Item "$dir/bin/ffmpeg.exe")) {
+            Copy-Item $f.FullName src-tauri/ffmpeg/
+            $resources["ffmpeg/$($f.Name)"] = $f.Name
           }
+          # yt-dlp + QuickJS (YouTube), verified against pinned checksums
+          foreach ($tool in @(@{ url = $env:YTDLP_WINDOWS; sha = $env:YTDLP_WINDOWS_SHA256; name = 'yt-dlp.exe' },
+                              @{ url = $env:QJS_WINDOWS; sha = $env:QJS_WINDOWS_SHA256; name = 'qjs.exe' })) {
+            $out = "src-tauri/ffmpeg/$($tool.name)"
+            Invoke-WebRequest $tool.url -OutFile $out
+            $hash = (Get-FileHash $out -Algorithm SHA256).Hash.ToLower()
+            if ($hash -ne $tool.sha) { throw "$($tool.name): checksum $hash doesn't match $($tool.sha)" }
+            $resources["ffmpeg/$($tool.name)"] = $tool.name
+          }
+          # Smoke test: the bundled tools can find a YouTube song (as Catlify runs them)
+          & src-tauri/ffmpeg/yt-dlp.exe --js-runtimes "quickjs:$(Resolve-Path src-tauri/ffmpeg/qjs.exe)" `
+            --ffmpeg-location src-tauri/ffmpeg -J --no-warnings --no-playlist --playlist-items 1 `
+            -f "bestaudio[ext=m4a]/bestaudio" --force-ipv4 "ytsearch1:LANY Stuck" | ConvertFrom-Json | Select-Object id, title, format_id
+          if ($LASTEXITCODE -ne 0) { throw "bundled yt-dlp couldn't reach YouTube" }
+          & src-tauri/ffmpeg/ffmpeg.exe -hide_banner -encoders | Select-String "mp3"
           @{ bundle = @{ resources = $resources } } | ConvertTo-Json -Depth 5 | Set-Content src-tauri/tauri.windows.conf.json
           Get-Content src-tauri/tauri.windows.conf.json
 
@@ -166,6 +186,8 @@ jobs:
           mkdir -p out
           b=src-tauri/target/release/bundle
           if [ "$RUNNER_OS" = macOS ]; then
+            # The bundled yt-dlp must start inside the signed app (Python.framework loads).
+            "$b/macos/Catlify.app/Contents/MacOS/ytdlp-apple" --ytdlp-apple-version
             cp "$b"/dmg/*.dmg "out/Catlify_${v}_macos-arm64.dmg"
             ditto -c -k --keepParent "$b/macos/Catlify.app" "out/Catlify_${v}_macos-arm64.app.zip"
             # In-app update package + signature
