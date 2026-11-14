@@ -148,11 +148,16 @@ jobs:
             if ($hash -ne $tool.sha) { throw "$($tool.name): checksum $hash doesn't match $($tool.sha)" }
             $resources["ffmpeg/$($tool.name)"] = $tool.name
           }
-          # Smoke test: the bundled tools can find a YouTube song (as Catlify runs them)
-          & src-tauri/ffmpeg/yt-dlp.exe --js-runtimes "quickjs:$(Resolve-Path src-tauri/ffmpeg/qjs.exe)" `
-            --ffmpeg-location src-tauri/ffmpeg -J --no-warnings --no-playlist --playlist-items 1 `
-            -f "bestaudio[ext=m4a]/bestaudio" --force-ipv4 "ytsearch1:LANY Stuck" | ConvertFrom-Json | Select-Object id, title, format_id
-          if ($LASTEXITCODE -ne 0) { throw "bundled yt-dlp couldn't reach YouTube" }
+          # Smoke test of the bundled tools, run the way Catlify runs them. (Full extraction isn't
+          # checked: YouTube asks datacenter addresses like CI runners to sign in.)
+          $qjs = "quickjs:$(Resolve-Path src-tauri/ffmpeg/qjs.exe)"
+          $found = & src-tauri/ffmpeg/yt-dlp.exe --js-runtimes $qjs --flat-playlist --print id "ytsearch1:LANY Stuck"
+          if ($LASTEXITCODE -ne 0 -or -not $found) { throw "bundled yt-dlp couldn't search YouTube" }
+          "YouTube search: $found"
+          $debug = (& src-tauri/ffmpeg/yt-dlp.exe --js-runtimes $qjs -v --simulate --flat-playlist "ytsearch1:x" 2>&1) -join "`n"
+          $runtimes = ($debug -split "`n") | Select-String "JS runtimes"
+          "$runtimes"
+          if (-not ("$runtimes" -match "quickjs")) { throw "yt-dlp doesn't see the bundled QuickJS" }
           & src-tauri/ffmpeg/ffmpeg.exe -hide_banner -encoders | Select-String "mp3"
           @{ bundle = @{ resources = $resources } } | ConvertTo-Json -Depth 5 | Set-Content src-tauri/tauri.windows.conf.json
           Get-Content src-tauri/tauri.windows.conf.json
