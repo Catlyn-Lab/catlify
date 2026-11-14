@@ -1,0 +1,135 @@
+name: stafy
+options:
+  bundleIdPrefix: app.stafy.player
+  deploymentTarget:
+    iOS: 15.0
+fileGroups: [../../src]
+packages:
+  # yt-dlp in-process on an embedded Python (iOS can't run programs): YouTube songs, downloads, videos.
+  ytdlp-apple:
+    url: https://github.com/Catlyn-Lab/ytdlp-apple.git
+    from: 0.1.1
+configs:
+  debug: debug
+  release: release
+settingGroups:
+  app:
+    base:
+      PRODUCT_NAME: Catlify
+      PRODUCT_BUNDLE_IDENTIFIER: app.stafy.player
+targetTemplates:
+  app:
+    type: application
+    sources:
+      - path: Sources
+    scheme:
+      environmentVariables:
+        RUST_BACKTRACE: full
+        RUST_LOG: info
+    settings:
+      groups: [app]
+targets:
+  stafy_iOS:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+      - path: Assets.xcassets
+      # Exclude built static libs: regenerating with xcodegen after a build
+      # otherwise turns the per-configuration libapp.a copies into colliding
+      # resources ("Multiple commands produce …/libapp.a"). They are linked
+      # via LIBRARY_SEARCH_PATHS, never bundled as resources.
+      - path: Externals
+        excludes: ["**/*.a"]
+      - path: stafy_iOS
+      - path: assets
+        buildPhase: resources
+        type: folder
+      - path: LaunchScreen.storyboard
+    info:
+      path: stafy_iOS/Info.plist
+      properties:
+        LSRequiresIPhoneOS: true
+        UILaunchStoryboardName: LaunchScreen
+        UIRequiredDeviceCapabilities: [arm64, metal]
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        CFBundleShortVersionString: 0.1.1
+        CFBundleVersion: "0.1.1"
+        # Keep playing with the screen locked / in the car.
+        UIBackgroundModes: [audio]
+        UIFileSharingEnabled: true
+        # Wi-Fi sync with other Catlify devices.
+        NSLocalNetworkUsageDescription: Catlify finds your other devices on this Wi-Fi to sync songs, likes and playlists.
+        NSBonjourServices: [_catlify._tcp]
+        LSSupportsOpeningDocumentsInPlace: true
+        # CarPlay scene only; the phone window keeps Tauri's own lifecycle.
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            CPTemplateApplicationSceneSessionRoleApplication:
+              - UISceneConfigurationName: CarPlay
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).CarPlaySceneDelegate
+    entitlements:
+      path: stafy_iOS/stafy_iOS.entitlements
+      properties:
+        # Requires Apple's approval for distribution (developer.apple.com/carplay); works in the simulator.
+        com.apple.developer.carplay-audio: true
+    scheme:
+      environmentVariables:
+        RUST_BACKTRACE: full
+        RUST_LOG: info
+    settings:
+      base:
+        ENABLE_BITCODE: false
+        SWIFT_VERSION: "5.0"
+        SWIFT_OBJC_BRIDGING_HEADER: Sources/stafy/media/StafyBridge.h
+        ARCHS: [arm64]
+        VALID_ARCHS: arm64 
+        LIBRARY_SEARCH_PATHS[arch=x86_64]: $(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)
+        LIBRARY_SEARCH_PATHS[arch=arm64]: $(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: true
+        # The install-python phase writes Python's standard library into the app bundle.
+        ENABLE_USER_SCRIPT_SANDBOXING: false
+        EXCLUDED_ARCHS[sdk=iphoneos*]: x86_64
+      groups: [app]
+    dependencies:
+      - framework: libapp.a
+        embed: false
+      - sdk: CoreGraphics.framework
+      - sdk: Metal.framework
+      - sdk: MetalKit.framework
+      - sdk: QuartzCore.framework
+      - sdk: Security.framework
+      - sdk: UIKit.framework
+      - sdk: WebKit.framework
+      - sdk: AVFoundation.framework
+      - sdk: AudioToolbox.framework
+      - sdk: CoreAudio.framework
+      - sdk: MediaPlayer.framework
+      - sdk: CarPlay.framework
+      - sdk: libz.tbd
+      - package: ytdlp-apple
+        product: YTDLP
+    postBuildScripts:
+      # Python's standard library for yt-dlp (iOS needs each binary module as a signed framework).
+      - script: |
+          "${BUILD_DIR%/Build/*}/SourcePackages/checkouts/ytdlp-apple/scripts/install-python.sh"
+        name: Install Python for yt-dlp
+        basedOnDependencyAnalysis: false
+    preBuildScripts:
+      - script: |
+          if [ -z "${FFMPEG_DIR:-}" ]; then if [ "${PLATFORM_NAME:-}" = iphonesimulator ]; then export FFMPEG_DIR="${SRCROOT}/../../../third_party/ffmpeg/ios-sim"; else export FFMPEG_DIR="${SRCROOT}/../../../third_party/ffmpeg/ios"; fi; fi
+          pnpm tauri ios xcode-script -v --platform "${PLATFORM_DISPLAY_NAME:?}" --sdk-root "${SDKROOT:?}" --framework-search-paths "${FRAMEWORK_SEARCH_PATHS:?}" --header-search-paths "${HEADER_SEARCH_PATHS:?}" --gcc-preprocessor-definitions "${GCC_PREPROCESSOR_DEFINITIONS:-}" --configuration "${CONFIGURATION:?}" ${FORCE_COLOR} ${ARCHS:?}
+        name: Build Rust Code
+        basedOnDependencyAnalysis: false
+        outputFiles:
+          - $(SRCROOT)/Externals/x86_64/${CONFIGURATION}/libapp.a
+          - $(SRCROOT)/Externals/arm64/${CONFIGURATION}/libapp.a

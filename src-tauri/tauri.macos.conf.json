@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "bundle": {
+    "externalBin": ["binaries/ytdlp-apple"],
+    "resources": {
+      "resources/ytdlp-apple_YTDLP.bundle/": "ytdlp-apple_YTDLP.bundle/"
+    },
+    "macOS": {
+      "frameworks": ["frameworks/Python.framework"]
+    }
+  }
+}

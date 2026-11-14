@@ -1,0 +1,3 @@
+[env]
+# Default for desktop macOS builds; mobile build scripts override FFMPEG_DIR per target.
+FFMPEG_DIR = { value = "../third_party/ffmpeg/macos", relative = true }

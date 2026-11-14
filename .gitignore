@@ -1,0 +1,12 @@
+node_modules
+dist
+src-tauri/target
+src-tauri/gen/schemas
+.DS_Store
+third_party/
+.claude/
+release/
+# Staged by scripts/ytdlp-apple.sh (macOS build)
+src-tauri/binaries/
+src-tauri/frameworks/
+src-tauri/resources/ytdlp-apple_YTDLP.bundle/

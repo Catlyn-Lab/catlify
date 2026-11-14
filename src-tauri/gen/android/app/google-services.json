@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "413936171197",
+    "project_id": "stafy-d75b6",
+    "storage_bucket": "stafy-d75b6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413936171197:android:7385b17876bede90921fd4",
+        "android_client_info": {
+          "package_name": "app.stafy.player"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfaYgJ_05AJymIVzCS3HHqb19RIwQMIPE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

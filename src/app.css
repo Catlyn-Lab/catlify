@@ -1,0 +1,307 @@
+:root {
+  --bg: #0c0b0f;
+  --bg-raised: #131118;
+  --surface: #1a1820;
+  --surface-hover: #221f2a;
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.13);
+  --text: #f4f0f7;
+  --muted: #a39cae;
+  --dim: #6d6778;
+  --violet: #9d86ff;
+  --coral: #ff7b67;
+  --accent: linear-gradient(120deg, var(--violet), var(--coral));
+  --gold: #e9c46a;
+  --radius: 10px;
+  --radius-lg: 16px;
+
+  --serif: "New York", "Iowan Old Style", "Palatino Linotype", ui-serif, Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI Variable Text", "Segoe UI", system-ui, Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+
+  --sidebar-w: 236px;
+  --panel-w: 360px;
+  --player-h: 84px;
+
+  /* Notch / punch-hole / home-indicator safe areas (see lib/platform.ts). */
+  --safe-top: max(env(safe-area-inset-top, 0px), var(--native-top, 0px));
+  --safe-bottom: max(env(safe-area-inset-bottom, 0px), var(--native-bottom, 0px));
+  --safe-left: max(env(safe-area-inset-left, 0px), var(--native-left, 0px));
+  --safe-right: max(env(safe-area-inset-right, 0px), var(--native-right, 0px));
+  --tabbar-h: 56px;
+  --mini-h: 62px;
+
+  color-scheme: dark;
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  display: block;
+}
+
+::selection {
+  background: rgba(157, 134, 255, 0.35);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.86em;
+  letter-spacing: -0.01em;
+}
+
+.serif {
+  font-family: var(--serif);
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  font-weight: 600;
+}
+
+.page {
+  padding: 28px 40px 48px;
+  max-width: 1500px;
+}
+
+.page-title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 44px;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 6px 0 22px;
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: 23px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 34px 0 14px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.section-title button {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--muted);
+}
+.section-title button:hover {
+  color: var(--text);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  transition: background 0.15s, transform 0.1s;
+}
+.btn:hover {
+  background: var(--surface-hover);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn.primary {
+  background: var(--text);
+  color: #111;
+  border-color: transparent;
+}
+.btn.primary:hover {
+  background: #fff;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  transition: all 0.15s;
+}
+.chip:hover {
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+.chip.active {
+  color: #111;
+  background: var(--text);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--line-strong);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.badge.hires {
+  border-color: rgba(233, 196, 106, 0.45);
+  color: var(--gold);
+}
+.badge.lossless {
+  border-color: rgba(157, 134, 255, 0.45);
+  color: var(--violet);
+}
+.badge.local {
+  border-color: rgba(120, 220, 170, 0.4);
+  color: #7ddcaa;
+}
+
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 26px 20px;
+}
+
+.empty {
+  padding: 80px 20px;
+  text-align: center;
+  color: var(--muted);
+}
+.empty h3 {
+  font-family: var(--serif);
+  font-size: 26px;
+  color: var(--text);
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.fade-in {
+  animation: fade-in 0.35s ease both;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* ---- phone layout (store.mobile toggles html.m) ---- */
+html.m .page {
+  padding: 14px 16px 28px;
+}
+html.m .page-title {
+  font-size: 32px;
+  margin: 4px 0 16px;
+}
+html.m .section-title {
+  font-size: 20px;
+  margin: 26px 0 10px;
+}
+/* Room for the floating back button on sub-pages. */
+html.m .mshell:has(.mback) .page {
+  padding-top: 54px;
+}
+html.m .grid-cards {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+  gap: 14px !important;
+}
+html.m button, html.m a {
+  -webkit-tap-highlight-color: transparent;
+}
+html.m ::-webkit-scrollbar {
+  display: none;
+}
+html.m input, html.m select, html.m textarea {
+  font-size: 16px; /* stops iOS zooming into focused fields */
+}

@@ -1,0 +1,15 @@
+{
+  "originHash" : "30b4e3f937b654564e05991edd1ab6854f6e3f0cf4f04fe08bc1a8a63fc50292",
+  "pins" : [
+    {
+      "identity" : "ytdlp-apple",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Catlyn-Lab/ytdlp-apple.git",
+      "state" : {
+        "revision" : "b9e79a122a51e43999ed74e2eb6e91ff31ae5699",
+        "version" : "0.1.1"
+      }
+    }
+  ],
+  "version" : 3
+}

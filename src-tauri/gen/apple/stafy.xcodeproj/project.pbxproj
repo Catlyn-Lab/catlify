@@ -1,0 +1,625 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02C224A9D8CA7B4B50EE0D49 /* Bootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8211135B002320B8180AFDF /* Bootstrap.swift */; };
+		091BD2E7F8E7D26C4415DAA5 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2425278BCEB865150119C0 /* Metal.framework */; };
+		12BB902DEB5F906C08A7297B /* CarPlay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C63FF3ADB0F8CA1C6676F30F /* CarPlay.framework */; };
+		1B9C3DD055E5FF394463C1E8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E753264FE0537739BB194E /* QuartzCore.framework */; };
+		4316F9C189229404F0C4B21D /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D36BE4C55F6B5EDE35C79FD /* MediaPlayer.framework */; };
+		4839763F81334F12487243CE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71FB1B8A72B12AE7D9F54998 /* UIKit.framework */; };
+		58FED44FA09832E381DE6F68 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAB5703E95E19B3802503BDF /* CoreAudio.framework */; };
+		592F32D068F973B63AA4E3BC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 15261B64BDFE7115D55E008B /* libz.tbd */; };
+		64A2074E01FEE7F11B34FCE6 /* NowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E11B3A1AA434144B359759A /* NowPlaying.swift */; };
+		705767A20C838BFB7D2E4341 /* YTDLP in Frameworks */ = {isa = PBXBuildFile; productRef = 5D4E4545E31A7F0F1167E385 /* YTDLP */; };
+		75066B5A99A4E4C5D72AEA33 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7C84387A8FFB507FB9DD5664 /* main.mm */; };
+		79B5DE20D0D047F3B33ED733 /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D126FC4D9EE0F6167C5DF /* libapp.a */; };
+		7AD4845B6C860327D3BFA304 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 34EDE0BDB5D6C2894170D355 /* assets */; };
+		8BA9773F486BE91AA5BF381B /* CarPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87862E7969ADE283D1C4F772 /* CarPlay.swift */; };
+		B995F05008C10B08DD997143 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB1A6C70AC7BD450B8F73BB0 /* LaunchScreen.storyboard */; };
+		B9B162AD9B10D33604AC6BC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B06ACD759FA5470C41698C0 /* Assets.xcassets */; };
+		C39E8F2CC75E583E0AE31B39 /* StafyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B27D31853FC0A90447D9A4 /* StafyEngine.swift */; };
+		C61F46529E09E8933A4B5DBC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFB9BFE4EA01FA3208A380BD /* CoreGraphics.framework */; };
+		CEB3858ADE36BB5110FA0909 /* YTDLPBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E018EF9D1B7E7517E8BF1B /* YTDLPBridge.swift */; };
+		DE58B3D534DC729724B091B1 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E07604FEC1904B041E663E28 /* AudioToolbox.framework */; };
+		EBD4A41000FA231E0741424B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0B150F4246F835CEDB52BFF /* AVFoundation.framework */; };
+		EC8940CCEEE209BBE74E9110 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FF1F06A7F9993431DAA2564 /* WebKit.framework */; };
+		EE4B38BDFB98392AB123B823 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACB7188DCDFB9EB75AB89730 /* MetalKit.framework */; };
+		F00F90E15A0E6F3B816FD0B5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D13D81DAD920AD2DF232668 /* Security.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		03A0C932DBCDA7BF025BA59B /* lib.rs */ = {isa = PBXFileReference; path = lib.rs; sourceTree = "<group>"; };
+		08E018EF9D1B7E7517E8BF1B /* YTDLPBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YTDLPBridge.swift; sourceTree = "<group>"; };
+		13A95688B35F9F02F7511322 /* engine.rs */ = {isa = PBXFileReference; path = engine.rs; sourceTree = "<group>"; };
+		15261B64BDFE7115D55E008B /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		1E11B3A1AA434144B359759A /* NowPlaying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlaying.swift; sourceTree = "<group>"; };
+		1F6FD827250D6382282247C4 /* notch.rs */ = {isa = PBXFileReference; path = notch.rs; sourceTree = "<group>"; };
+		202986DBF728BF9C159464D4 /* stafy_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = stafy_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B06ACD759FA5470C41698C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2FF1F06A7F9993431DAA2564 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		34EDE0BDB5D6C2894170D355 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
+		35B27D31853FC0A90447D9A4 /* StafyEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StafyEngine.swift; sourceTree = "<group>"; };
+		3D13D81DAD920AD2DF232668 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		3D2425278BCEB865150119C0 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		3F44F74109E8F035A1857CE5 /* media_controls.rs */ = {isa = PBXFileReference; path = media_controls.rs; sourceTree = "<group>"; };
+		444B049CA30483FF7CEDD713 /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
+		47A508247CC872AE9C1E6FD0 /* sync.rs */ = {isa = PBXFileReference; path = sync.rs; sourceTree = "<group>"; };
+		49E753264FE0537739BB194E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		4C53D52CF66D1943CF46E894 /* ytrun.rs */ = {isa = PBXFileReference; path = ytrun.rs; sourceTree = "<group>"; };
+		5D36BE4C55F6B5EDE35C79FD /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		62C4407DC6DE46A664EB298A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		71FB1B8A72B12AE7D9F54998 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		722DB29277B6130FFCE3B8ED /* ffi.rs */ = {isa = PBXFileReference; path = ffi.rs; sourceTree = "<group>"; };
+		76FC1A6B8CB10F691133DB0C /* rpc.rs */ = {isa = PBXFileReference; path = rpc.rs; sourceTree = "<group>"; };
+		7C4D126FC4D9EE0F6167C5DF /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
+		7C84387A8FFB507FB9DD5664 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		7E7532C071A6803B9702CAD2 /* sleep.rs */ = {isa = PBXFileReference; path = sleep.rs; sourceTree = "<group>"; };
+		7F7B8E523580F7E13ACFEA12 /* importer.rs */ = {isa = PBXFileReference; path = importer.rs; sourceTree = "<group>"; };
+		85CD5BD390AA291ADC3FBABF /* stafy_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = stafy_iOS.entitlements; sourceTree = "<group>"; };
+		8625EA00FE386F96DAC23D7B /* jni_bridge.rs */ = {isa = PBXFileReference; path = jni_bridge.rs; sourceTree = "<group>"; };
+		87862E7969ADE283D1C4F772 /* CarPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlay.swift; sourceTree = "<group>"; };
+		88630161C702ADFCB40CCB54 /* core.rs */ = {isa = PBXFileReference; path = core.rs; sourceTree = "<group>"; };
+		A2543D122FE2FADB23F732F0 /* library.rs */ = {isa = PBXFileReference; path = library.rs; sourceTree = "<group>"; };
+		AB1A6C70AC7BD450B8F73BB0 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		ACB7188DCDFB9EB75AB89730 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		AFB9BFE4EA01FA3208A380BD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		AFF2F19B45DE297231F98A72 /* ytmeta.rs */ = {isa = PBXFileReference; path = ytmeta.rs; sourceTree = "<group>"; };
+		B0F722A16FD2F975E7BF4D77 /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
+		B58E8E79747F080BE65B4728 /* tests.rs */ = {isa = PBXFileReference; path = tests.rs; sourceTree = "<group>"; };
+		B9EE0F18B4399E5C00BA8272 /* StafyBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StafyBridge.h; sourceTree = "<group>"; };
+		C63FF3ADB0F8CA1C6676F30F /* CarPlay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CarPlay.framework; path = System/Library/Frameworks/CarPlay.framework; sourceTree = SDKROOT; };
+		C74802CDB505EA7AEA8C30D2 /* decoder.rs */ = {isa = PBXFileReference; path = decoder.rs; sourceTree = "<group>"; };
+		C8D0473F858250E1E6E970D1 /* youtube.rs */ = {isa = PBXFileReference; path = youtube.rs; sourceTree = "<group>"; };
+		C94F46A6BBE87132DF35E630 /* lyrics.rs */ = {isa = PBXFileReference; path = lyrics.rs; sourceTree = "<group>"; };
+		D75D619B4F129E67B43A5F41 /* charts.rs */ = {isa = PBXFileReference; path = charts.rs; sourceTree = "<group>"; };
+		DAB5703E95E19B3802503BDF /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		E07604FEC1904B041E663E28 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		E8211135B002320B8180AFDF /* Bootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bootstrap.swift; sourceTree = "<group>"; };
+		F0B150F4246F835CEDB52BFF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		F4406C9703F01ADE9EF0034D /* main.rs */ = {isa = PBXFileReference; path = main.rs; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9DB0FD2CC4F5A5A22FDF3BCF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79B5DE20D0D047F3B33ED733 /* libapp.a in Frameworks */,
+				C61F46529E09E8933A4B5DBC /* CoreGraphics.framework in Frameworks */,
+				091BD2E7F8E7D26C4415DAA5 /* Metal.framework in Frameworks */,
+				EE4B38BDFB98392AB123B823 /* MetalKit.framework in Frameworks */,
+				1B9C3DD055E5FF394463C1E8 /* QuartzCore.framework in Frameworks */,
+				F00F90E15A0E6F3B816FD0B5 /* Security.framework in Frameworks */,
+				4839763F81334F12487243CE /* UIKit.framework in Frameworks */,
+				EC8940CCEEE209BBE74E9110 /* WebKit.framework in Frameworks */,
+				EBD4A41000FA231E0741424B /* AVFoundation.framework in Frameworks */,
+				DE58B3D534DC729724B091B1 /* AudioToolbox.framework in Frameworks */,
+				58FED44FA09832E381DE6F68 /* CoreAudio.framework in Frameworks */,
+				4316F9C189229404F0C4B21D /* MediaPlayer.framework in Frameworks */,
+				12BB902DEB5F906C08A7297B /* CarPlay.framework in Frameworks */,
+				592F32D068F973B63AA4E3BC /* libz.tbd in Frameworks */,
+				705767A20C838BFB7D2E4341 /* YTDLP in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		04B7CAE8CAF95059196B30D0 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				702FE77C95F11774A3B92970 /* stafy */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		104ADF22BAA3266159ECA1C5 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				D75D619B4F129E67B43A5F41 /* charts.rs */,
+				88630161C702ADFCB40CCB54 /* core.rs */,
+				722DB29277B6130FFCE3B8ED /* ffi.rs */,
+				7F7B8E523580F7E13ACFEA12 /* importer.rs */,
+				8625EA00FE386F96DAC23D7B /* jni_bridge.rs */,
+				03A0C932DBCDA7BF025BA59B /* lib.rs */,
+				A2543D122FE2FADB23F732F0 /* library.rs */,
+				C94F46A6BBE87132DF35E630 /* lyrics.rs */,
+				F4406C9703F01ADE9EF0034D /* main.rs */,
+				3F44F74109E8F035A1857CE5 /* media_controls.rs */,
+				1F6FD827250D6382282247C4 /* notch.rs */,
+				76FC1A6B8CB10F691133DB0C /* rpc.rs */,
+				7E7532C071A6803B9702CAD2 /* sleep.rs */,
+				47A508247CC872AE9C1E6FD0 /* sync.rs */,
+				B58E8E79747F080BE65B4728 /* tests.rs */,
+				C8D0473F858250E1E6E970D1 /* youtube.rs */,
+				AFF2F19B45DE297231F98A72 /* ytmeta.rs */,
+				4C53D52CF66D1943CF46E894 /* ytrun.rs */,
+				65F812B123F7FD41D7F15D0D /* audio */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = "<group>";
+		};
+		33C2F64D478EAFDAEADBF082 /* stafy_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				62C4407DC6DE46A664EB298A /* Info.plist */,
+				85CD5BD390AA291ADC3FBABF /* stafy_iOS.entitlements */,
+			);
+			path = stafy_iOS;
+			sourceTree = "<group>";
+		};
+		65F812B123F7FD41D7F15D0D /* audio */ = {
+			isa = PBXGroup;
+			children = (
+				C74802CDB505EA7AEA8C30D2 /* decoder.rs */,
+				13A95688B35F9F02F7511322 /* engine.rs */,
+				444B049CA30483FF7CEDD713 /* mod.rs */,
+			);
+			path = audio;
+			sourceTree = "<group>";
+		};
+		702FE77C95F11774A3B92970 /* stafy */ = {
+			isa = PBXGroup;
+			children = (
+				7C84387A8FFB507FB9DD5664 /* main.mm */,
+				E4F6A4D25A0880D50DCEBFE9 /* bindings */,
+				FA1D7437220B822FB2F03E94 /* media */,
+			);
+			path = stafy;
+			sourceTree = "<group>";
+		};
+		9C42C622A8DEFE86E2A5B75D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E07604FEC1904B041E663E28 /* AudioToolbox.framework */,
+				F0B150F4246F835CEDB52BFF /* AVFoundation.framework */,
+				C63FF3ADB0F8CA1C6676F30F /* CarPlay.framework */,
+				DAB5703E95E19B3802503BDF /* CoreAudio.framework */,
+				AFB9BFE4EA01FA3208A380BD /* CoreGraphics.framework */,
+				7C4D126FC4D9EE0F6167C5DF /* libapp.a */,
+				15261B64BDFE7115D55E008B /* libz.tbd */,
+				5D36BE4C55F6B5EDE35C79FD /* MediaPlayer.framework */,
+				3D2425278BCEB865150119C0 /* Metal.framework */,
+				ACB7188DCDFB9EB75AB89730 /* MetalKit.framework */,
+				49E753264FE0537739BB194E /* QuartzCore.framework */,
+				3D13D81DAD920AD2DF232668 /* Security.framework */,
+				71FB1B8A72B12AE7D9F54998 /* UIKit.framework */,
+				2FF1F06A7F9993431DAA2564 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B67BBF5AF59882810C0F1CDC = {
+			isa = PBXGroup;
+			children = (
+				34EDE0BDB5D6C2894170D355 /* assets */,
+				2B06ACD759FA5470C41698C0 /* Assets.xcassets */,
+				AB1A6C70AC7BD450B8F73BB0 /* LaunchScreen.storyboard */,
+				B9B7D2F0F921E2DCD1DE6DBD /* Externals */,
+				04B7CAE8CAF95059196B30D0 /* Sources */,
+				104ADF22BAA3266159ECA1C5 /* src */,
+				33C2F64D478EAFDAEADBF082 /* stafy_iOS */,
+				9C42C622A8DEFE86E2A5B75D /* Frameworks */,
+				C9FEE4A9E9D0DD11E2A5AA5B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B9B7D2F0F921E2DCD1DE6DBD /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		C9FEE4A9E9D0DD11E2A5AA5B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				202986DBF728BF9C159464D4 /* stafy_iOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E4F6A4D25A0880D50DCEBFE9 /* bindings */ = {
+			isa = PBXGroup;
+			children = (
+				B0F722A16FD2F975E7BF4D77 /* bindings.h */,
+			);
+			path = bindings;
+			sourceTree = "<group>";
+		};
+		FA1D7437220B822FB2F03E94 /* media */ = {
+			isa = PBXGroup;
+			children = (
+				E8211135B002320B8180AFDF /* Bootstrap.swift */,
+				87862E7969ADE283D1C4F772 /* CarPlay.swift */,
+				1E11B3A1AA434144B359759A /* NowPlaying.swift */,
+				B9EE0F18B4399E5C00BA8272 /* StafyBridge.h */,
+				35B27D31853FC0A90447D9A4 /* StafyEngine.swift */,
+				08E018EF9D1B7E7517E8BF1B /* YTDLPBridge.swift */,
+			);
+			path = media;
+			sourceTree = "<group>";
+		};
+		"TEMP_5B2719D1-F58B-44D3-B3D7-C7F802BB224D" /* arm64 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = arm64;
+			sourceTree = "<group>";
+		};
+		"TEMP_8CFC8356-7D69-4482-A9A4-0F7FE711E869" /* x86_64 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = x86_64;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		ED2095DD4CC3B6BEE2A0696B /* stafy_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 910BACA2C9E295C8012AD7D8 /* Build configuration list for PBXNativeTarget "stafy_iOS" */;
+			buildPhases = (
+				D1851464DF3A86935213E56C /* Build Rust Code */,
+				5829264AA7FF1A5633FD06FB /* Sources */,
+				E9003BA32C3108F2DEFA1AC7 /* Resources */,
+				9DB0FD2CC4F5A5A22FDF3BCF /* Frameworks */,
+				E543B9EC39C1439BDE22C7B7 /* Install Python for yt-dlp */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = stafy_iOS;
+			packageProductDependencies = (
+				5D4E4545E31A7F0F1167E385 /* YTDLP */,
+			);
+			productName = stafy_iOS;
+			productReference = 202986DBF728BF9C159464D4 /* stafy_iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1A9422C81B9E393B794BE475 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 4DF1A526C62B96F0C720A3A8 /* Build configuration list for PBXProject "stafy" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = B67BBF5AF59882810C0F1CDC;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F9538B40720384A7FC2200F3 /* XCRemoteSwiftPackageReference "ytdlp-apple" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = C9FEE4A9E9D0DD11E2A5AA5B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				ED2095DD4CC3B6BEE2A0696B /* stafy_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E9003BA32C3108F2DEFA1AC7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9B162AD9B10D33604AC6BC8 /* Assets.xcassets in Resources */,
+				B995F05008C10B08DD997143 /* LaunchScreen.storyboard in Resources */,
+				7AD4845B6C860327D3BFA304 /* assets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D1851464DF3A86935213E56C /* Build Rust Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Rust Code";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Externals/x86_64/${CONFIGURATION}/libapp.a",
+				"$(SRCROOT)/Externals/arm64/${CONFIGURATION}/libapp.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -z \"${FFMPEG_DIR:-}\" ]; then if [ \"${PLATFORM_NAME:-}\" = iphonesimulator ]; then export FFMPEG_DIR=\"${SRCROOT}/../../../third_party/ffmpeg/ios-sim\"; else export FFMPEG_DIR=\"${SRCROOT}/../../../third_party/ffmpeg/ios\"; fi; fi\npnpm tauri ios xcode-script -v --platform \"${PLATFORM_DISPLAY_NAME:?}\" --sdk-root \"${SDKROOT:?}\" --framework-search-paths \"${FRAMEWORK_SEARCH_PATHS:?}\" --header-search-paths \"${HEADER_SEARCH_PATHS:?}\" --gcc-preprocessor-definitions \"${GCC_PREPROCESSOR_DEFINITIONS:-}\" --configuration \"${CONFIGURATION:?}\" ${FORCE_COLOR} ${ARCHS:?}\n";
+		};
+		E543B9EC39C1439BDE22C7B7 /* Install Python for yt-dlp */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Install Python for yt-dlp";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/ytdlp-apple/scripts/install-python.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5829264AA7FF1A5633FD06FB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				02C224A9D8CA7B4B50EE0D49 /* Bootstrap.swift in Sources */,
+				8BA9773F486BE91AA5BF381B /* CarPlay.swift in Sources */,
+				64A2074E01FEE7F11B34FCE6 /* NowPlaying.swift in Sources */,
+				C39E8F2CC75E583E0AE31B39 /* StafyEngine.swift in Sources */,
+				CEB3858ADE36BB5110FA0909 /* YTDLPBridge.swift in Sources */,
+				75066B5A99A4E4C5D72AEA33 /* main.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		17C1C1285475C08EE23CE0D0 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = debug;
+		};
+		3107EF2140F94BCA388A15A3 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = stafy_iOS/stafy_iOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = stafy_iOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = app.stafy.player;
+				PRODUCT_NAME = Catlify;
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = Sources/stafy/media/StafyBridge.h;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = release;
+		};
+		AA4D4A0161DC1C9E3C06A7B0 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = release;
+		};
+		B26493B0012EF072620C11DA /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = stafy_iOS/stafy_iOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = stafy_iOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = app.stafy.player;
+				PRODUCT_NAME = Catlify;
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = Sources/stafy/media/StafyBridge.h;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4DF1A526C62B96F0C720A3A8 /* Build configuration list for PBXProject "stafy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				17C1C1285475C08EE23CE0D0 /* debug */,
+				AA4D4A0161DC1C9E3C06A7B0 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+		910BACA2C9E295C8012AD7D8 /* Build configuration list for PBXNativeTarget "stafy_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B26493B0012EF072620C11DA /* debug */,
+				3107EF2140F94BCA388A15A3 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F9538B40720384A7FC2200F3 /* XCRemoteSwiftPackageReference "ytdlp-apple" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Catlyn-Lab/ytdlp-apple.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5D4E4545E31A7F0F1167E385 /* YTDLP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F9538B40720384A7FC2200F3 /* XCRemoteSwiftPackageReference "ytdlp-apple" */;
+			productName = YTDLP;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 1A9422C81B9E393B794BE475 /* Project object */;
+}

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b1624"/>
+      <stop offset="1" stop-color="#0c0b0f"/>
+    </linearGradient>
+    <radialGradient id="glowV" cx="0.22" cy="0.18" r="0.7">
+      <stop offset="0" stop-color="#9d86ff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#9d86ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowC" cx="0.85" cy="0.9" r="0.6">
+      <stop offset="0" stop-color="#ff7b67" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#ff7b67" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="disc" x1="0.15" y1="0.1" x2="0.9" y2="0.95">
+      <stop offset="0" stop-color="#9d86ff"/>
+      <stop offset="0.55" stop-color="#d07fb6"/>
+      <stop offset="1" stop-color="#ff7b67"/>
+    </linearGradient>
+    <radialGradient id="shine" cx="0.32" cy="0.26" r="0.55">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <rect width="1024" height="1024" fill="url(#glowV)"/>
+  <rect width="1024" height="1024" fill="url(#glowC)"/>
+  <g transform="translate(512 512) scale(0.84) translate(-512 -478)">
+  <!-- cat ears (behind the record) -->
+  <g fill="url(#disc)" stroke="url(#disc)" stroke-width="34" stroke-linejoin="round">
+    <path d="M 300 380 L 318 168 L 468 278 Z"/>
+    <path d="M 724 380 L 706 168 L 556 278 Z"/>
+  </g>
+  <g fill="#0c0b0f" fill-opacity="0.28">
+    <path d="M 338 330 L 348 222 L 428 282 Z"/>
+    <path d="M 686 330 L 676 222 L 596 282 Z"/>
+  </g>
+  <!-- record -->
+  <circle cx="512" cy="548" r="300" fill="url(#disc)"/>
+  <circle cx="512" cy="548" r="248" fill="none" stroke="#0c0b0f" stroke-opacity="0.16" stroke-width="5"/>
+  <circle cx="512" cy="548" r="200" fill="none" stroke="#0c0b0f" stroke-opacity="0.16" stroke-width="5"/>
+  <circle cx="512" cy="548" r="152" fill="none" stroke="#0c0b0f" stroke-opacity="0.16" stroke-width="5"/>
+  <circle cx="512" cy="548" r="300" fill="url(#shine)"/>
+  <circle cx="512" cy="548" r="78" fill="#0c0b0f"/>
+  <circle cx="512" cy="548" r="22" fill="url(#disc)"/>
+  </g>
+</svg>
