@@ -48,6 +48,12 @@ mod imp {
     use std::path::{Path, PathBuf};
     use std::process::{Command, Stdio};
 
+    const INSTALL_HINT: &str = if cfg!(windows) {
+        "yt-dlp is not installed. Install it with: winget install yt-dlp.yt-dlp"
+    } else {
+        "yt-dlp is not installed. Install it with: brew install yt-dlp ffmpeg"
+    };
+
     /// Runs started with an id: id → process id (for cancel).
     static JOBS: Mutex<Option<HashMap<String, u32>>> = Mutex::new(None);
 
@@ -58,7 +64,11 @@ mod imp {
         if let Some(home) = std::env::var_os("HOME") {
             dirs.push(Path::new(&home).join(".local/bin"));
         }
-        dirs.into_iter().map(|d| d.join(name)).find(|p| p.is_file())
+        if let Some(local) = std::env::var_os("LOCALAPPDATA") {
+            dirs.push(Path::new(&local).join("Microsoft/WinGet/Links")); // winget
+        }
+        let file = if cfg!(windows) { format!("{name}.exe") } else { name.to_string() };
+        dirs.into_iter().map(|d| d.join(&file)).find(|p| p.is_file())
     }
 
     /// The `ytdlp-apple` shipped inside Catlify.app (scripts/ytdlp-apple.sh), when this is a bundle.
@@ -79,12 +89,16 @@ mod imp {
     }
 
     pub fn run(args: &[String], id: Option<&str>, on_line: &mut dyn FnMut(&str, bool)) -> Result<Output> {
-        let tool = tool().ok_or_else(|| anyhow::anyhow!("yt-dlp is not installed. Install it with: brew install yt-dlp ffmpeg"))?;
-        let mut child = Command::new(&tool)
-            .args(args)
-            .stdin(Stdio::null())
-            .stdout(Stdio::piped())
-            .stderr(Stdio::piped())
+        let tool = tool().ok_or_else(|| anyhow::anyhow!("{}", INSTALL_HINT))?;
+        let mut command = Command::new(&tool);
+        command.args(args).stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped());
+        #[cfg(windows)]
+        {
+            // No console window flashing up for each yt-dlp run.
+            use std::os::windows::process::CommandExt;
+            command.creation_flags(0x0800_0000); // CREATE_NO_WINDOW
+        }
+        let mut child = command
             .spawn()
             .with_context(|| format!("starting {}", tool.display()))?;
         if let Some(id) = id {
@@ -117,6 +131,9 @@ mod imp {
 
     pub fn cancel(id: &str) {
         if let Some(pid) = JOBS.lock().as_mut().and_then(|j| j.remove(id)) {
+            #[cfg(windows)]
+            let _ = Command::new("taskkill").args(["/PID", &pid.to_string(), "/T", "/F"]).status();
+            #[cfg(not(windows))]
             let _ = Command::new("kill").arg(pid.to_string()).status();
         }
     }

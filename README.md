@@ -1,52 +1,202 @@
+<div align="center">
+
+<img src="design/icon-rounded.png" width="128" alt="Catlify icon">
+
 # Catlify
 
-A lightweight, lossless-first music player for macOS, Windows, Linux, Android and iOS.
+**A lightweight, lossless-first music player for every screen you own.**<br>
+Your files in full quality, live charts, synced lyrics, YouTube, and your car, in one small app.
 
-- **Player**: gapless playback, seek, shuffle, repeat (all/one), queue, volume, OS media keys / Now Playing / Windows media overlay
-- **Every format**: FLAC, ALAC, WAV, AIFF, APE, WavPack, TTA, TAK, WMA (Lossless), DSD (DSF/DFF), Opus, Vorbis, MP3, AAC, … via FFmpeg
-- **Library**: folder scanning (incremental), albums, artists, songs, liked songs, playlists, search, play counts, hi-res/lossless badges
-- **Lyrics**: synced (karaoke-style, click a line to seek) from `.lrc` sidecar files, embedded tags, or [LRCLIB](https://lrclib.net), cached
-- **Billboard**: live Apple Music top songs/albums for 23 countries and the Deezer global chart. Songs you own play from your files in full quality; others play 30 s previews
+[![Release](https://img.shields.io/github/v/release/Catlyn-Lab/catlify?label=download&color=6d28d9)](https://github.com/Catlyn-Lab/catlify/releases/latest)
+[![Build](https://img.shields.io/github/actions/workflow/status/Catlyn-Lab/catlify/release.yml?label=release%20build)](https://github.com/Catlyn-Lab/catlify/actions/workflows/release.yml)
+![Platforms](https://img.shields.io/badge/macOS%20·%20Windows%20·%20Linux%20·%20Android%20·%20iOS-111)
+![Tauri 2](https://img.shields.io/badge/Tauri-2-24c8db?logo=tauri&logoColor=white)
+![Svelte 5](https://img.shields.io/badge/Svelte-5-ff3e00?logo=svelte&logoColor=white)
+![Rust](https://img.shields.io/badge/Rust-engine-b7410e?logo=rust&logoColor=white)
 
-## Stack
+[Download](#️-download) · [Features](#-features) · [In the car](#-in-the-car) · [YouTube](#️-youtube) · [Develop](#-develop) · [Releasing](#-releasing)
 
-| Layer | Tech |
-|---|---|
-| Shell | Tauri 2 (system webview, so no bundled browser) |
-| UI | Svelte 5 + Vite (~130 KB JS) |
-| Decode | FFmpeg (`ffmpeg-next`), any codec → f32 at the device rate (swresample) |
-| Output | cpal (CoreAudio / WASAPI / ALSA·Pulse / AAudio) via a lock-free ring buffer (`rtrb`) |
-| Tags & art | lofty, with an FFmpeg fallback for DSD/WMA/TAK |
-| Storage | SQLite (rusqlite, bundled) |
-| Media keys | souvlaki (desktop) |
+</div>
 
-```
-src/                      Svelte UI
-  lib/api.ts              typed Tauri commands
-  lib/store.svelte.ts     global state (player, library, navigation)
-  views/                  Home, Billboard, Songs, Albums, Artists, Playlist, Search, Settings
-  components/             PlayerBar, TrackList (virtualised), LyricsView, NowPlaying, Queue…
-src-tauri/src/
-  audio/decoder.rs        FFmpeg decoder + resampler + sample-accurate seek
-  audio/engine.rs         gapless engine: decode thread, ring buffer, queue/shuffle/repeat
-  library.rs              scanner, tag reader, SQLite, playlists, lyrics cache
-  lyrics.rs               .lrc / embedded / LRCLIB lookup
-  charts.rs               Apple Music + iTunes previews + Deezer
-  media_controls.rs       OS media integration
-```
+---
 
-## Develop
+## ⬇️ Download
 
-Requirements: Rust, Node + pnpm, FFmpeg dev libraries (`brew install ffmpeg pkg-config` on macOS).
+| Platform | Get it | Notes |
+|---|---|---|
+| **macOS** (Apple silicon) | [`.dmg` from the latest release](https://github.com/Catlyn-Lab/catlify/releases/latest) | Not notarized yet: open it the first time with right-click → **Open** |
+| **Windows** 10/11 (x64) | [`-setup.exe` or `.msi`](https://github.com/Catlyn-Lab/catlify/releases/latest) | For YouTube: `winget install yt-dlp.yt-dlp` |
+| **Android** | Firebase App Distribution (testers) | Android Auto included |
+| **iPhone / iPad** | Build from source | CarPlay included |
+| **Linux** | Build from source | |
+
+## ✨ Features
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 🎧 Sounds like the file
+Gapless playback with a sample-accurate engine. FLAC, ALAC, WAV, AIFF, APE, WavPack, TTA, TAK,
+WMA Lossless, **DSD** (DSF/DFF), Opus, Vorbis, MP3, AAC and more, with hi-res and lossless badges.
+
+</td>
+<td width="50%" valign="top">
+
+### 📚 Your library
+Fast incremental folder scanning, albums, artists, songs, liked songs, playlists, search and play counts.
+Songs that go missing are hidden, never deleted.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### 🎤 Synced lyrics
+Karaoke-style lyrics: tap a line to jump there. From `.lrc` files, embedded tags or
+[LRCLIB](https://lrclib.net), cached for offline. Shown on CarPlay and Android Auto too.
+
+</td>
+<td valign="top">
+
+### 📈 Charts, genres and moods
+Live Apple Music top songs for 23 countries, the Deezer global chart, 18 genres and 12 moods
+(chill, focus, workout, road trip…). Songs you own play from your files.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### ▶️ YouTube
+Search or paste a link, watch with **See video** in fullscreen, or download any song, even the one
+playing from a chart, with tags and cover art.
+
+</td>
+<td valign="top">
+
+### 🚗 Made for the car
+Android Auto, CarPlay and Bluetooth with title, artist and artwork, steering-wheel controls,
+and playback that resumes on its own when the car connects.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### 🔄 Wi-Fi sync, no cloud
+Pair devices with a 6-digit code and sync songs, likes, play counts and playlists both ways
+over your home network.
+
+</td>
+<td valign="top">
+
+### 📥 Bring your playlists
+Import from Spotify, Apple Music, YouTube Music, Google Takeout or any CSV. Missing songs are
+matched and downloaded, and progress survives a restart.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### 🌙 Sleep timer
+15, 30 or 60 minutes, or end of track, with a gentle fade-out. Also on the car screen.
+
+</td>
+<td valign="top">
+
+### 🏝️ Notch player (macOS)
+A tiny island around the MacBook camera: artwork and a level meter, full controls on hover.
+
+</td>
+</tr>
+</table>
+
+### ⌨️ Keyboard
+
+| Key | Action | Key | Action |
+|---|---|---|---|
+| `Space` | Play / pause | `⌘F` | Search |
+| `←` `→` | Seek 5 s | `L` | Lyrics |
+| `⌘←` `⌘→` | Previous / next | `Q` | Queue |
+| `⌘↑` `⌘↓` | Volume | `⌘[` | Back |
+
+## 🚗 In the car
+
+Every car path goes through the OS media session, so the engine runs inside a native media service that works
+without the UI. A car can start it cold.
+
+| | Android | iPhone |
+|---|---|---|
+| **Car screen** | Android Auto: Recent · Library · Browse · Playlists, search, voice, lyrics, sleep timer | CarPlay: the same tabs, Now Playing with lyrics and sleep buttons |
+| **Bluetooth** | Title, artist, album, artwork, duration, position, track n/N, steering-wheel next/prev | Now Playing info and remote commands, including seek |
+| **Car connects** | Resumes playback even when the app isn't open (needs the "Nearby devices" permission) | Can ignore the head unit's auto-play |
+| **Car disconnects** | Pauses | Pauses |
+| **Calls / navigation** | Pauses for calls, ducks for directions | Pauses and resumes |
+
+> [!TIP]
+> Bluetooth to a car is always lossy (SBC/AAC). Wired CarPlay or Android Auto sounds better.
+
+<details>
+<summary><b>Testing in a car simulator</b></summary>
+
+- **Android Auto**: install Android Auto on the emulator or phone, enable developer mode → "Start head unit server",
+  run `adb forward tcp:5277 tcp:5277`, then `$ANDROID_HOME/extras/google/auto/desktop-head-unit`.
+- **CarPlay**: Xcode → Simulator → I/O → External Displays → CarPlay.
+- Shipping CarPlay needs Apple's `com.apple.developer.carplay-audio` entitlement. The simulator works without it.
+
+</details>
+
+## ▶️ YouTube
+
+Paste a link or search. Catlify guesses the artist and title, lets you edit them, saves the song to
+`~/Music/Catlify` (on iPhone: Files → On My iPhone → Catlify → YouTube) and adds it to the library with tags and cover art.
+
+| Platform | yt-dlp | MP3 |
+|---|---|---|
+| macOS, iPhone, iPad | Built in through [**ytdlp-apple**](https://github.com/Catlyn-Lab/ytdlp-apple), nothing to install | Mac: with `brew install ffmpeg`, otherwise M4A. iPhone/iPad: M4A |
+| Android | Built in | ✓ |
+| Windows, Linux | Your own `yt-dlp` (`winget install yt-dlp.yt-dlp`) | With ffmpeg, otherwise M4A |
+
+> [!NOTE]
+> Only download content you own or have permission to save.
+
+## 🛠 Develop
+
+**You need** Rust, Node 22 and pnpm. For mobile: Xcode (iOS) or Android Studio's SDK and NDK (Android).
 
 ```sh
 pnpm install
-pnpm tauri dev            # run the app
-pnpm dev                  # UI only, in a browser, with mocked backend (try ?view=billboard&panel=lyrics)
-pnpm tauri build          # release bundle
+scripts/build-ffmpeg.sh macos-arm64   # once: a minimal static FFmpeg (~3 MB)
+pnpm tauri dev                        # run the app
+pnpm dev                              # UI only, in a browser, with a mocked backend (?view=billboard&panel=lyrics)
 ```
 
-Tests (format coverage + live engine test):
+<details>
+<summary><b>Release builds per platform</b></summary>
+
+```sh
+# macOS: bundle yt-dlp (once per ytdlp-apple version), then build
+scripts/ytdlp-apple.sh
+pnpm tauri build
+
+# iOS (FFMPEG_DIR selects device or simulator libraries)
+scripts/build-ffmpeg.sh ios-arm64 && scripts/build-ffmpeg.sh ios-sim-arm64
+IOS_SIM=1 scripts/ios.sh dev
+scripts/ios.sh build
+
+# Android
+scripts/build-ffmpeg.sh android-arm64 && scripts/build-ffmpeg.sh android-x86_64
+scripts/android.sh build              # sets SDK/NDK/JDK and the bindgen sysroot
+```
+
+Windows links the LGPL FFmpeg 9 DLLs that `FFMPEG_DIR` points to (see `.github/workflows/release.yml`).
+
+</details>
+
+<details>
+<summary><b>Tests</b></summary>
 
 ```sh
 cd src-tauri
@@ -54,102 +204,47 @@ STAFY_TEST_MUSIC=/path/to/samples cargo test --lib -- --nocapture
 STAFY_TEST_MUSIC=/path/to/samples cargo test --lib engine_ -- --ignored   # plays (muted) through your speakers
 ```
 
-## Keyboard
+</details>
 
-`Space` play/pause · `←/→` seek 5 s · `⌘←/⌘→` previous/next · `⌘↑/⌘↓` volume · `⌘F` search · `L` lyrics · `Q` queue · `⌘[` back
+<details>
+<summary><b>Architecture</b></summary>
 
-## Mobile, cars and Bluetooth
+| Layer | Tech |
+|---|---|
+| Shell | Tauri 2 (system webview, no bundled browser) |
+| UI | Svelte 5 + Vite (~130 KB JS) |
+| Decode | FFmpeg (`ffmpeg-next`): any codec → f32 at the device rate |
+| Output | cpal (CoreAudio / WASAPI / ALSA·Pulse / AAudio) through a lock-free ring buffer |
+| Tags & art | lofty, with an FFmpeg fallback for DSD/WMA/TAK |
+| Storage | SQLite (bundled), numbered migrations |
+| Mobile | One shared engine (`core.rs`) behind a JSON RPC (`rpc.rs`) over JNI (`jni_bridge.rs`) and a C ABI (`ffi.rs`) |
 
-All car paths go through the OS media session, so the Rust engine runs inside a native media service
-that works with no UI (a car can start it cold). UI and service share one engine (`src-tauri/src/core.rs`)
-through a JSON RPC (`rpc.rs`) exposed over JNI (`jni_bridge.rs`) and a C ABI (`ffi.rs`).
-
-| | Android (`gen/android/.../media/`) | iOS (`gen/apple/Sources/stafy/media/`) |
-|---|---|---|
-| Car screen | Android Auto via Media3 `MediaLibraryService`, 4 tabs: Recent · Library · Billboard · Playlists, search, voice | CarPlay `CPTabBarTemplate` with the same tabs + `CPNowPlayingTemplate` |
-| Bluetooth (AVRCP) | Title/artist/album/duration/position, track n/N, artwork via `content://`, steering-wheel next/prev, long-press seek | `MPNowPlayingInfoCenter` + `MPRemoteCommandCenter` (incl. seek forward/backward) |
-| Car connects | Resumes playback even when the app isn't running (`CarConnectReceiver` on Bluetooth ACL, needs "Nearby devices"), or optionally ignores head-unit auto-play (Mazda Connect sends PLAY on connect) | Optional ignore of head-unit auto-play |
-| Car disconnects | Pause (`BECOMING_NOISY`) | Pause (`oldDeviceUnavailable`) |
-| Calls / navigation | Audio focus: pause for calls, system ducking for nav prompts | Interruptions: pause + resume |
-| Output device changes | Engine reopens the stream (AAudio disconnect on Bluetooth switch) and resumes at the same position | same (desktop polls the default device) |
-
-Notes:
-- Bluetooth to a car is lossy (SBC/AAC) regardless of source. Wired CarPlay/Android Auto is the better path.
-- CarPlay distribution needs Apple's `com.apple.developer.carplay-audio` entitlement (request at developer.apple.com/carplay). It works in the simulator without it.
-- Tauri's iOS runtime assigns its own delegate to every scene; `Bootstrap.swift` routes CarPlay sessions to `CarPlaySceneDelegate`.
-
-### Building
-
-```sh
-# Minimal static FFmpeg (≈3.3 MB per target), once per platform:
-scripts/build-ffmpeg.sh macos-arm64
-scripts/build-ffmpeg.sh ios-arm64 && scripts/build-ffmpeg.sh ios-sim-arm64
-scripts/build-ffmpeg.sh android-arm64 && scripts/build-ffmpeg.sh android-x86_64
-
-# iOS (FFMPEG_DIR selects device vs simulator libs)
-IOS_SIM=1 scripts/ios.sh dev
-scripts/ios.sh build
-
-# Android (lib/arm64 and lib/amd64 are picked per ABI)
-scripts/android.sh build   # sets SDK/NDK/JDK + bindgen sysroot
+```
+src/                      Svelte UI
+  lib/                    api.ts (typed commands), store.svelte.ts (global state), importer, downloads
+  views/                  Home, Billboard, Songs, Albums, Artists, Playlist, Search, YouTube, Settings
+  components/             PlayerBar, TrackList, LyricsView, NowPlaying, QueuePanel, VideoPlayer…
+src-tauri/src/
+  audio/                  decoder (FFmpeg + resampler + seek), gapless engine
+  library.rs              scanner, tags, SQLite, playlists, lyrics cache
+  charts.rs · lyrics.rs   Apple Music / iTunes / Deezer charts; .lrc / embedded / LRCLIB lyrics
+  youtube.rs · ytrun.rs   YouTube downloads; how yt-dlp runs on each platform
+  sync.rs · importer.rs   Wi-Fi sync (mDNS + HMAC-signed HTTP), playlist import
+  sleep.rs · notch.rs     sleep timer, macOS notch player
+src-tauri/gen/android/    Media3 service, Android Auto, Bluetooth car receiver
+src-tauri/gen/apple/      CarPlay, Now Playing, ytdlp-apple bridge
 ```
 
-Testing in a car simulator:
-- **Android Auto**: install Android Auto on the emulator/phone, enable developer mode → "Start head unit server",
-  `adb forward tcp:5277 tcp:5277`, then run `$ANDROID_HOME/extras/google/auto/desktop-head-unit`.
-- **CarPlay**: Xcode → Simulator → I/O → External Displays → CarPlay.
+</details>
 
-## Notch player (macOS)
+## 🚀 Releasing
 
-`src-tauri/src/notch.rs` + `src/notch/`. A borderless window at menu-bar level over the camera housing,
-sized from `NSScreen.safeAreaInsets` / `auxiliaryTop{Left,Right}Area`. It ignores the mouse except over the visible island,
-so menu-bar clicks around it keep working. Collapsed: artwork + level meter beside the camera. On song change: title peek.
-On hover: full controls, seek bar and format badge. Displays without a notch get a notch-sized pill. Toggle in Settings.
-Closing the main window now hides it (music and notch keep going); the Dock icon brings it back.
+1. Create a branch `release/<version>`, for example `release/0.1.15`.
+2. Set `"version"` in `src-tauri/tauri.conf.json` to the same version.
+3. Open a pull request into `main` and merge it.
 
-## YouTube (desktop, iPhone/iPad, Android)
+GitHub Actions then builds macOS (`.dmg`, `.app.zip`) and Windows (`-setup.exe`, `.msi`), tags the merge
+commit `v<version>` and publishes the release. To try the builds without releasing, use
+**Actions → Release → Run workflow**.
 
-Paste a link or search; Catlify guesses artist/title from the video, lets you edit them, then saves the song
-into `~/Music/Catlify` (changeable; on iPhone: Files → On My iPhone → Catlify → YouTube) and adds it to the
-library with tags and cover art. "Download" on a song streaming from a chart or playlist saves that exact video.
-
-How yt-dlp runs (`src-tauri/src/ytrun.rs`):
-- **macOS, iPhone, iPad**: [ytdlp-apple](https://github.com/Catlyn-Lab/ytdlp-apple), a Swift package that runs
-  yt-dlp on an embedded Python and solves YouTube's JavaScript challenges with JavaScriptCore. iOS links the
-  library (`gen/apple/project.yml`, `media/YTDLPBridge.swift`); the Mac app bundles its `ytdlp-apple` command
-  (`scripts/ytdlp-apple.sh` before `pnpm tauri build`; `tauri.macos.conf.json`). Nothing to install.
-- **Windows, Linux** (and `tauri dev` on a Mac): the user's own `yt-dlp`.
-- **Android**: a bundled yt-dlp driven from Kotlin (`StafyYouTube.kt`).
-
-MP3 needs ffmpeg (desktop: `brew install ffmpeg`); without it songs are saved as M4A (YouTube's own AAC audio).
-Only download content you own or have permission to save.
-
-## Wi-Fi sync (all platforms)
-
-`src-tauri/src/sync.rs` · Library → Sync devices. No account or cloud. Each device runs a small HTTP server on the
-LAN and announces itself over mDNS (`_catlify._tcp`); "Pair by address" covers routers that block discovery.
-Pairing: a 6-digit code shown on one device and typed on the other; both derive a shared secret (never sent)
-and HMAC-sign every request. Sync is two-way: missing songs (matched by a content fingerprint) are copied into
-`Music/Catlify/Synced`, then likes (union), play counts (max) and playlists (by name) are merged. Nothing is deleted.
-Meant for trusted home networks (plain HTTP on the LAN; files aren't encrypted in transit).
-
-## Import (desktop, Android)
-
-`src-tauri/src/importer.rs` + `src/lib/importer.svelte.ts` · Library → Import. Public Spotify / Apple Music links
-are read from their public pages; YouTube Music playlists via yt-dlp; files: Spotify data export or Exportify CSV,
-Apple Music "Export Playlist" (.txt/.xml), Google Takeout CSV, any CSV with title/artist. Songs already in the library
-are skipped; the top YouTube result is downloaded when `matchScore` (src/lib/similarity.ts) is ≥ 90, otherwise the
-user chooses. Progress is saved and resumes after a restart.
-
-## Library safety
-
-Schema changes are numbered migrations (`MIGRATIONS` in library.rs; never edit a shipped step). Songs a scan can't
-see are hidden (`missing_since`), not deleted, and come back with likes/playlists when visible again (purged after
-30 days). iOS container moves are followed by rebasing stored paths.
-
-## Status
-
-- macOS desktop: built and tested (format/seek/tag tests, live gapless engine test, real YouTube download test).
-- Android: debug APK builds (`scripts/android.sh build --debug --apk`); launches on the emulator, media session registers. minSdk 26 (AAudio).
-- iOS: compiles and links for device (unsigned). Signing needs your Apple team; the simulator needs Xcode's iOS 27 simulator SDK.
-- Android library scanning uses file paths (`READ_MEDIA_AUDIO`); a Storage Access Framework folder picker is still TODO.
+`main` is protected: changes land through pull requests that a Catlyn-Lab admin merges.
