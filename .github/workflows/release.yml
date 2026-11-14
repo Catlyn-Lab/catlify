@@ -72,6 +72,10 @@ jobs:
             the first time, right-click Catlify → Open, or run `xattr -dr com.apple.quarantine /Applications/Catlify.app`.
           - **Windows**: run the `-setup.exe` (or the `.msi`). YouTube support is built in.
           EOF
+          # A failed earlier run leaves an unpublished draft (no tag yet): start over.
+          if [ "$(gh release view "${{ steps.version.outputs.tag }}" --json isDraft --jq .isDraft 2>/dev/null)" = true ]; then
+            gh release delete "${{ steps.version.outputs.tag }}" --yes
+          fi
           gh release create "${{ steps.version.outputs.tag }}" --draft --target "$SHA" \
             --title "Catlify ${{ steps.version.outputs.version }}" --notes-file notes.md --generate-notes
 
