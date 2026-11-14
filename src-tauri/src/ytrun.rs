@@ -49,7 +49,7 @@ mod imp {
     use std::process::{Command, Stdio};
 
     const INSTALL_HINT: &str = if cfg!(windows) {
-        "yt-dlp is not installed. Install it with: winget install yt-dlp.yt-dlp"
+        "yt-dlp is missing. Reinstall Catlify, or install it with: winget install yt-dlp.yt-dlp"
     } else {
         "yt-dlp is not installed. Install it with: brew install yt-dlp ffmpeg"
     };
@@ -71,17 +71,37 @@ mod imp {
         dirs.into_iter().map(|d| d.join(&file)).find(|p| p.is_file())
     }
 
-    /// The `ytdlp-apple` shipped inside Catlify.app (scripts/ytdlp-apple.sh), when this is a bundle.
-    fn bundled() -> Option<PathBuf> {
+    /// A tool shipped next to Catlify's executable (release builds), e.g. `bundled("ffmpeg")`.
+    pub fn bundled(name: &str) -> Option<PathBuf> {
         let exe = std::env::current_exe().ok()?;
-        let dir = exe.parent()?;
-        let tool = dir.join("ytdlp-apple");
-        let python = dir.join("../Frameworks/Python.framework");
-        (cfg!(target_os = "macos") && tool.is_file() && python.exists()).then_some(tool)
+        let file = if cfg!(windows) { format!("{name}.exe") } else { name.to_string() };
+        Some(exe.parent()?.join(file)).filter(|p| p.is_file())
+    }
+
+    /// yt-dlp shipped with Catlify: `ytdlp-apple` inside Catlify.app (scripts/ytdlp-apple.sh) or
+    /// `yt-dlp.exe` next to Catlify.exe (release workflow).
+    fn bundled_ytdlp() -> Option<PathBuf> {
+        if cfg!(target_os = "macos") {
+            let tool = bundled("ytdlp-apple")?;
+            tool.parent()?.join("../Frameworks/Python.framework").exists().then_some(tool)
+        } else {
+            bundled("yt-dlp")
+        }
     }
 
     pub fn tool() -> Option<PathBuf> {
-        bundled().or_else(|| find_tool("yt-dlp"))
+        bundled_ytdlp().or_else(|| find_tool("yt-dlp"))
+    }
+
+    /// yt-dlp needs a JavaScript runtime for YouTube's challenges. ytdlp-apple has JavaScriptCore;
+    /// Windows builds ship QuickJS (`qjs.exe`) for the standalone yt-dlp.exe.
+    fn runtime_args(tool: &Path) -> Vec<String> {
+        match bundled("qjs") {
+            Some(qjs) if Some(tool) == bundled_ytdlp().as_deref() => {
+                vec!["--js-runtimes".into(), format!("quickjs:{}", qjs.display())]
+            }
+            _ => vec![],
+        }
     }
 
     pub fn available() -> bool {
@@ -91,7 +111,7 @@ mod imp {
     pub fn run(args: &[String], id: Option<&str>, on_line: &mut dyn FnMut(&str, bool)) -> Result<Output> {
         let tool = tool().ok_or_else(|| anyhow::anyhow!("{}", INSTALL_HINT))?;
         let mut command = Command::new(&tool);
-        command.args(args).stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped());
+        command.args(runtime_args(&tool)).args(args).stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped());
         #[cfg(windows)]
         {
             // No console window flashing up for each yt-dlp run.
@@ -206,7 +226,7 @@ mod imp {
 }
 
 #[cfg(desktop)]
-pub use imp::find_tool;
+pub use imp::{bundled, find_tool};
 
 #[cfg(target_os = "ios")]
 pub use imp::{register, FreeFn, LineFn, RunFn};

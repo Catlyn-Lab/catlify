@@ -25,7 +25,7 @@ Your files in full quality, live charts, synced lyrics, YouTube, and your car, i
 | Platform | Get it | Notes |
 |---|---|---|
 | **macOS** (Apple silicon) | [`.dmg` from the latest release](https://github.com/Catlyn-Lab/catlify/releases/latest) | Not notarized yet: open it the first time with right-click → **Open** |
-| **Windows** 10/11 (x64) | [`-setup.exe` or `.msi`](https://github.com/Catlyn-Lab/catlify/releases/latest) | For YouTube: `winget install yt-dlp.yt-dlp` |
+| **Windows** 10/11 (x64) | [`-setup.exe` or `.msi`](https://github.com/Catlyn-Lab/catlify/releases/latest) | YouTube built in |
 | **Android** | Firebase App Distribution (testers) | Android Auto included |
 | **iPhone / iPad** | Build from source | CarPlay included |
 | **Linux** | Build from source | |
@@ -161,7 +161,8 @@ Paste a link or search. Catlify guesses the artist and title, lets you edit them
 |---|---|---|
 | macOS, iPhone, iPad | Built in through [**ytdlp-apple**](https://github.com/Catlyn-Lab/ytdlp-apple), nothing to install | Mac: with `brew install ffmpeg`, otherwise M4A. iPhone/iPad: M4A |
 | Android | Built in | ✓ |
-| Windows, Linux | Your own `yt-dlp` (`winget install yt-dlp.yt-dlp`) | With ffmpeg, otherwise M4A |
+| Windows | Built in: yt-dlp with QuickJS for YouTube's challenges | ✓ (bundled ffmpeg) |
+| Linux | Your own `yt-dlp` | With ffmpeg, otherwise M4A |
 
 > [!NOTE]
 > Only download content you own or have permission to save.
@@ -195,7 +196,8 @@ scripts/build-ffmpeg.sh android-arm64 && scripts/build-ffmpeg.sh android-x86_64
 scripts/android.sh build              # sets SDK/NDK/JDK and the bindgen sysroot
 ```
 
-Windows links the LGPL FFmpeg 9 DLLs that `FFMPEG_DIR` points to (see `.github/workflows/release.yml`).
+Windows links the LGPL FFmpeg 9 DLLs that `FFMPEG_DIR` points to and ships them with `ffmpeg.exe`,
+`yt-dlp.exe` and QuickJS next to `Catlify.exe` (see `.github/workflows/release.yml`).
 
 </details>
 

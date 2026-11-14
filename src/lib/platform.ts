@@ -2,6 +2,7 @@ import { api, ytBridge } from "./api";
 
 const ua = navigator.userAgent;
 export const isAndroid = /Android/i.test(ua);
+export const isWindows = /Windows/i.test(ua);
 export const isIOS = /iPhone|iPad|iPod/i.test(ua) || (ua.includes("Mac") && navigator.maxTouchPoints > 1);
 /** Phone apps (not just a narrow desktop window). */
 export const isMobileOS = isAndroid || isIOS;

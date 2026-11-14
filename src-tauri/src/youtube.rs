@@ -16,7 +16,7 @@ const SETTING_DIR: &str = "download_dir";
 /// ffmpeg, for MP3 conversion and embedding cover art (desktop only).
 fn ffmpeg() -> Option<PathBuf> {
     #[cfg(desktop)]
-    return ytrun::find_tool("ffmpeg");
+    return ytrun::bundled("ffmpeg").or_else(|| ytrun::find_tool("ffmpeg"));
     #[cfg(not(desktop))]
     return None;
 }
@@ -108,7 +108,7 @@ fn safe_name(s: &str) -> String {
 #[tauri::command(async)]
 pub fn youtube_download(app: AppHandle, url: String, id: String, title: String, artist: String, format: String) -> Result<(), String> {
     if !ytrun::available() {
-        return Err("yt-dlp is not installed. Install it with: brew install yt-dlp ffmpeg".into());
+        return Err(if cfg!(windows) { "yt-dlp is missing. Reinstall Catlify." } else { "yt-dlp is not installed. Install it with: brew install yt-dlp ffmpeg" }.into());
     }
     let ffmpeg = ffmpeg();
     if format == "mp3" && ffmpeg.is_none() {

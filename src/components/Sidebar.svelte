@@ -1,4 +1,5 @@
 <script lang="ts">
+  import logo from "../../src-tauri/icons/128x128@2x.png";
   import { api } from "../lib/api";
   import { store, type View } from "../lib/store.svelte";
   import Icon from "./Icon.svelte";
@@ -48,17 +49,7 @@
 <aside>
   <div class="drag" data-tauri-drag-region></div>
   <div class="brand" data-tauri-drag-region>
-    <svg class="logo" viewBox="0 0 24 24" aria-hidden="true">
-      <defs>
-        <linearGradient id="logo-g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#9d86ff" /><stop offset="1" stop-color="#ff7b67" />
-        </linearGradient>
-      </defs>
-      <!-- Catlify: a record with cat ears -->
-      <path d="M4.6 9.2 5.2 2.6 9.6 6M19.4 9.2 18.8 2.6 14.4 6" fill="url(#logo-g)" stroke="url(#logo-g)" stroke-width="1.6" stroke-linejoin="round" />
-      <circle cx="12" cy="13.6" r="8.4" fill="url(#logo-g)" />
-      <circle cx="12" cy="13.6" r="2.4" fill="var(--bg-raised)" />
-    </svg>
+    <img class="logo" src={logo} alt="" />
     <span class="word">catlify</span>
   </div>
 
@@ -139,10 +130,11 @@
     padding: 6px 10px 18px;
   }
   .logo {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     flex: none;
-    filter: drop-shadow(0 0 10px rgba(255, 123, 103, 0.35));
+    filter: drop-shadow(0 0 10px rgba(157, 134, 255, 0.35));
+    pointer-events: none;
   }
   .word {
     font-family: var(--serif);
