@@ -471,25 +471,36 @@ fn decode_thread(rx: Receiver<Cmd>, inner: Arc<Mutex<Inner>>, shared: Arc<Shared
     let mut stream: Option<cpal::Stream> = None;
     let mut device_id: Option<String> = None;
     let mut channels: u16 = 2;
+    // Whether the output stream is started (always, except on Android while paused).
+    let mut running = false;
     match open_output(&shared) {
-        Ok((s, p, ch, id)) => {
+        Ok((s, p, ch, id, started)) => {
             producer = p;
             channels = ch;
             stream = Some(s);
             device_id = id;
+            running = started;
         }
         Err(e) => inner.lock().error = Some(format!("Audio output unavailable: {e}")),
     }
     let mut out_rate = shared.out_rate.load(Ordering::Relaxed);
     let mut pending: Option<Cmd> = None;
     let mut last_device_check = std::time::Instant::now();
+    // (frames played, since when) while the stream should be making sound: see the stall check.
+    let mut stalled_at = (0u64, std::time::Instant::now());
 
     let mut decoder: Option<Decoder> = None;
     let mut buf: Vec<f32> = Vec::with_capacity(16 * 1024);
     let mut buf_read = 0usize;
     let mut produced: u64 = 0;
 
-    let flush = |shared: &Shared| {
+    let flush = |shared: &Shared, stream: &Option<cpal::Stream>, running: &mut bool, producer: &rtrb::Producer<f32>| {
+        // Nothing buffered (a new or drained stream): nothing to drop.
+        if GATE_STREAM && producer.slots() == producer.buffer().capacity() {
+            return shared.played.load(Ordering::Relaxed);
+        }
+        // The audio callback empties the buffer, so the stream has to run for a moment.
+        set_running(stream, running, true, shared);
         shared.flush.store(true, Ordering::Release);
         for _ in 0..200 {
             if !shared.flush.load(Ordering::Acquire) {
@@ -512,14 +523,16 @@ fn decode_thread(rx: Receiver<Cmd>, inner: Arc<Mutex<Inner>>, shared: Arc<Shared
         if shared.device_lost.swap(false, Ordering::Relaxed) {
             let rate_before = out_rate;
             drop(stream.take());
+            running = false;
             // Give the OS a moment to finish routing (Bluetooth A2DP setup).
             std::thread::sleep(Duration::from_millis(300));
             match open_output(&shared) {
-                Ok((s, p, ch, id)) => {
+                Ok((s, p, ch, id, started)) => {
                     producer = p;
                     channels = ch;
                     stream = Some(s);
                     device_id = id;
+                    running = started;
                     out_rate = shared.out_rate.load(Ordering::Relaxed);
                     // Restart the audible track where it was, at the new device's rate.
                     let g = inner.lock();
@@ -538,11 +551,29 @@ fn decode_thread(rx: Receiver<Cmd>, inner: Arc<Mutex<Inner>>, shared: Arc<Shared
             }
         }
 
+        if GATE_STREAM {
+            let playing = !shared.paused.load(Ordering::Relaxed);
+            set_running(&stream, &mut running, playing, &shared);
+            // A started stream with audio waiting that plays nothing is dead (some phones drop
+            // it without an error when Bluetooth reconnects): the song "runs" with no sound.
+            let played = shared.played.load(Ordering::Relaxed);
+            let waiting = producer.slots() < producer.buffer().capacity();
+            if played != stalled_at.0 || !running || !playing || !waiting {
+                stalled_at = (played, std::time::Instant::now());
+            } else if stalled_at.1.elapsed() > Duration::from_secs(3) {
+                log::warn!("audio stream stalled, reopening output");
+                stalled_at.1 = std::time::Instant::now();
+                shared.device_lost.store(true, Ordering::Relaxed);
+                continue;
+            }
+        }
+
         // Block when idle (waking periodically to watch the output device).
         let cmd = if let Some(c) = pending.take() {
             Some(c)
         } else if decoder.is_none() && buf_read >= buf.len() {
-            rx.recv_timeout(Duration::from_millis(1000)).ok()
+            // Android: short naps, so play/pause reaches the output stream promptly.
+            rx.recv_timeout(Duration::from_millis(if GATE_STREAM { 100 } else { 1000 })).ok()
         } else {
             rx.try_recv().ok()
         };
@@ -552,7 +583,7 @@ fn decode_thread(rx: Receiver<Cmd>, inner: Arc<Mutex<Inner>>, shared: Arc<Shared
                     let item = inner.lock().item_at(pos).cloned();
                     buf.clear();
                     buf_read = 0;
-                    produced = flush(&shared);
+                    produced = flush(&shared, &stream, &mut running, &producer);
                     decoder = None;
                     let Some(item) = item else { continue };
                     let opened = if is_remote(&item.path) {
@@ -622,7 +653,7 @@ fn decode_thread(rx: Receiver<Cmd>, inner: Arc<Mutex<Inner>>, shared: Arc<Shared
                     let Some(pos) = playing else { continue };
                     buf.clear();
                     buf_read = 0;
-                    produced = flush(&shared);
+                    produced = flush(&shared, &stream, &mut running, &producer);
                     let reuse = playing == decoding && decoder.is_some();
                     let result = if reuse {
                         decoder.as_mut().unwrap().seek(secs).map(|_| ())
@@ -650,7 +681,7 @@ fn decode_thread(rx: Receiver<Cmd>, inner: Arc<Mutex<Inner>>, shared: Arc<Shared
                 Cmd::Stop => {
                     buf.clear();
                     buf_read = 0;
-                    produced = flush(&shared);
+                    produced = flush(&shared, &stream, &mut running, &producer);
                     decoder = None;
                     let mut g = inner.lock();
                     g.boundaries.clear();
@@ -734,7 +765,16 @@ fn open_local(local: &str, rate: u32, channels: u16, start: f64) -> anyhow::Resu
     Ok(d)
 }
 
-type Output = (cpal::Stream, rtrb::Producer<f32>, u16, Option<String>);
+/// Stream, ring buffer writer, channels, device id, and whether the stream was started.
+type Output = (cpal::Stream, rtrb::Producer<f32>, u16, Option<String>, bool);
+
+/// Android: the output stream only runs while a song is playing. Android works out which app
+/// is "the one playing" from audio streams starting and stopping, and Bluetooth sends that
+/// app's title/artist to the car. A stream that ran all the time (silent while paused) made
+/// Catlify look like it was always playing: it stayed the active player while another app
+/// played, never announced that it had started, and held the Bluetooth audio link open.
+/// Elsewhere the stream stays open: it's cheap and resumes without a click.
+const GATE_STREAM: bool = cfg!(target_os = "android");
 
 fn default_device_id() -> Option<String> {
     cpal::default_host().default_output_device().and_then(|d| d.id().ok()).map(|id| format!("{id:?}"))
@@ -764,8 +804,32 @@ fn open_output(shared: &Arc<Shared>) -> anyhow::Result<Output> {
         cpal::SampleFormat::U16 => build::<u16>(&device, config.clone(), consumer, shared.clone()),
         other => anyhow::bail!("unsupported sample format {other:?}"),
     }?;
-    stream.play()?;
-    Ok((stream, producer, config.channels, id))
+    let start = !GATE_STREAM || !shared.paused.load(Ordering::Relaxed);
+    if start {
+        stream.play()?;
+    }
+    Ok((stream, producer, config.channels, id, start))
+}
+
+/// Starts or pauses the output stream to match playback (Android only, see [`GATE_STREAM`]).
+fn set_running(stream: &Option<cpal::Stream>, running: &mut bool, want: bool, shared: &Shared) {
+    if !GATE_STREAM || *running == want {
+        return;
+    }
+    let Some(s) = stream else { return };
+    match if want { s.play() } else { s.pause() } {
+        Ok(()) => *running = want,
+        Err(e) if want => {
+            // Disconnected while it was paused (the car's Bluetooth came or went): open a new one.
+            log::warn!("audio stream won't start, reopening output: {e}");
+            shared.device_lost.store(true, Ordering::Relaxed);
+        }
+        Err(e) => {
+            // Already dead; starting it again will fail and reopen the output.
+            log::warn!("audio stream won't pause: {e}");
+            *running = false;
+        }
+    }
 }
 
 fn build<T>(
@@ -809,9 +873,16 @@ where
         },
         {
             let shared = shared_for_errors;
-            move |e| {
-                log::warn!("audio stream error, reopening output: {e}");
-                shared.device_lost.store(true, Ordering::Relaxed);
+            move |e| match e.kind() {
+                // Glitches, not a lost device: the stream is still fine. Rebuilding it here cut
+                // the sound for ~0.5s each time, and a fresh stream can underrun again.
+                cpal::ErrorKind::Xrun | cpal::ErrorKind::RealtimeDenied | cpal::ErrorKind::DeviceChanged => {
+                    log::debug!("audio stream: {e}");
+                }
+                _ => {
+                    log::warn!("audio stream error, reopening output: {e}");
+                    shared.device_lost.store(true, Ordering::Relaxed);
+                }
             }
         },
         None,
